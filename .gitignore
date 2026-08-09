@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# TMC course-management files (not part of the actual project)
+tmc/
+.tmcproject.yml
+test/
