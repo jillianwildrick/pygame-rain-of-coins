@@ -21,6 +21,12 @@ class Robot:
         if self.rect.x > width - self.image.get_width():
             self.rect.x = width - self.image.get_width()
 
+    class FallingObject:
+        def __init__(self, x: int, y: int, image: pygame.surface, obj_type: str):
+            self.rect = image.get_rect()
+            self.rect.topleft = (x, y)
+            self.image = image
+            self.type = obj_type
     
 
 class Game:
