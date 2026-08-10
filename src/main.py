@@ -13,9 +13,9 @@ class Robot:
 
     def move(self, width: int):
         if self.to_left:
-            self.rect.x -= 3
+            self.rect.x -= 2
         if self.to_right:
-            self.rect.x += 3
+            self.rect.x += 2
         if self.rect.x < 0:
             self.rect.x = 0
         if self.rect.x > width - self.image.get_width():
@@ -38,11 +38,12 @@ class Game:
     def new_game(self):
         self.score = 0
         self.falling_objects = []
-        #self.robot = instantiate new robot after Robot class is defined
+        self.robot = Robot(WINDOW_WIDTH//2, WINDOW_HEIGHT - self.images["robot"].get_height(), self.images["robot"])
 
     def main_loop(self):
         while True:
             self.check_events()
+            self.robot.move(WINDOW_WIDTH)
 
             self.draw_window()
 
@@ -51,9 +52,21 @@ class Game:
             if event.type == pygame.QUIT:
                 exit()
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    self.robot.to_left = True
+                if event.key == pygame.K_RIGHT:
+                    self.robot.to_right = True
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    self.robot.to_left = False
+                if event.key == pygame.K_RIGHT:
+                    self.robot.to_right = False
+
     def draw_window(self):
         self.window.fill((0, 0, 0))
-
+        self.window.blit(self.robot.image, self.robot.rect)
         pygame.display.flip()
 
 
