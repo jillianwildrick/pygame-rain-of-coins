@@ -21,15 +21,15 @@ class Robot:
         if self.rect.x > width - self.image.get_width():
             self.rect.x = width - self.image.get_width()
 
-    class FallingObject:
-        def __init__(self, x: int, y: int, image: pygame.surface, obj_type: str):
-            self.rect = image.get_rect()
-            self.rect.topleft = (x, y)
-            self.image = image
-            self.type = obj_type
+class FallingObject:
+    def __init__(self, x: int, y: int, image: pygame.surface, obj_type: str):
+        self.rect = image.get_rect()
+        self.rect.topleft = (x, y)
+        self.image = image
+        self.type = obj_type
 
-        def fall(self):
-            self.rect.y += 2
+    def fall(self):
+        self.rect.y += 1
     
 
 class Game:
@@ -38,8 +38,10 @@ class Game:
         self.load_images()
         self.new_game()
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.clock = pygame.time.Clock()
         self.game_font = pygame.font.SysFont("Arial", 24)
         self.main_loop()
+        
 
     def load_images(self):
         self.images = {"robot": pygame.image.load("robot.png"), "coin": pygame.image.load("coin.png"), "monster": pygame.image.load("monster.png")}
@@ -49,12 +51,13 @@ class Game:
         self.falling_objects = []
         self.robot = Robot(WINDOW_WIDTH//2, WINDOW_HEIGHT - self.images["robot"].get_height(), self.images["robot"])
 
+
     def main_loop(self):
         while True:
             self.check_events()
             self.robot.move(WINDOW_WIDTH)
-
             self.draw_window()
+            self.clock.tick(60)
 
     def check_events(self):
         for event in pygame.event.get():
