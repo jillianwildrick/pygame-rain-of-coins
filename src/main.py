@@ -27,6 +27,9 @@ class Robot:
             self.rect.topleft = (x, y)
             self.image = image
             self.type = obj_type
+
+        def fall(self):
+            self.rect.y += 2
     
 
 class Game:
