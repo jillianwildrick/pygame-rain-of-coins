@@ -3,6 +3,26 @@ import pygame
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
 
+class Robot:
+    def __init__(self, x: int, y: int, image: pygame.surface):
+        self.rect = image.get_rect()
+        self.rect.topleft = (x, y)
+        self.image = image
+        self.to_right = False
+        self.to_left = False
+
+    def move(self, width: int):
+        if self.to_left:
+            self.rect.x -= 3
+        if self.to_right:
+            self.rect.x += 3
+        if self.rect.x < 0:
+            self.rect.x = 0
+        if self.rect.x > width - self.image.get_width():
+            self.rect.x = width - self.image.get_width()
+
+    
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -35,7 +55,6 @@ class Game:
         self.window.fill((0, 0, 0))
 
         pygame.display.flip()
-
 
 
 
