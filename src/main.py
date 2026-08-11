@@ -62,6 +62,15 @@ class Game:
                 obj.fall()
             if random.random() < SPAWN_CHANCE:
                 self.spawn_falling_object()
+            for obj in self.falling_objects[:]:
+                if self.intercepted(obj):
+                    if obj.obj_type == "coin":
+                        #score += 1
+                        self.falling_objects.remove(obj)
+                    else:
+                        #You lose!
+                        return
+                        
             self.falling_objects = [obj for obj in self.falling_objects if not self.is_off_screen(obj)]
             self.draw_window()
             self.clock.tick(60)
@@ -96,9 +105,11 @@ class Game:
         y = -self.images[obj_type].get_height()
         self.falling_objects.append(FallingObject(x, y, self.images[obj_type], obj_type))
 
-    def is_off_screen(self, obj):
+    def is_off_screen(self, obj: FallingObject):
         return obj.rect.y > WINDOW_HEIGHT
 
+    def intercepted(self, obj: FallingObject):
+        return self.robot.rect.colliderect(obj.rect)
 
 
 if __name__ == "__main__":
