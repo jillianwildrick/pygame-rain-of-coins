@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
@@ -12,10 +12,11 @@ class Robot:
         self.to_left = False
 
     def move(self, width: int):
+        MOVE_RATE = 2
         if self.to_left:
-            self.rect.x -= 2
+            self.rect.x -= MOVE_RATE
         if self.to_right:
-            self.rect.x += 2
+            self.rect.x += MOVE_RATE
         if self.rect.x < 0:
             self.rect.x = 0
         if self.rect.x > width - self.image.get_width():
@@ -26,10 +27,11 @@ class FallingObject:
         self.rect = image.get_rect()
         self.rect.topleft = (x, y)
         self.image = image
-        self.type = obj_type
+        self.obj_type = obj_type
 
     def fall(self):
-        self.rect.y += 1
+        FALL_RATE = 1        
+        self.rect.y += FALL_RATE
     
 
 class Game:
@@ -51,11 +53,15 @@ class Game:
         self.falling_objects = []
         self.robot = Robot(WINDOW_WIDTH//2, WINDOW_HEIGHT - self.images["robot"].get_height(), self.images["robot"])
 
-
     def main_loop(self):
+        SPAWN_CHANCE = 0.005
         while True:
             self.check_events()
             self.robot.move(WINDOW_WIDTH)
+            for obj in self.falling_objects:
+                obj.fall()
+            if random.random() < SPAWN_CHANCE:
+                self.spawn_falling_object()
             self.draw_window()
             self.clock.tick(60)
 
@@ -77,12 +83,17 @@ class Game:
                     self.robot.to_right = False
 
     def draw_window(self):
-        self.window.fill((0, 0, 0))
+        self.window.fill((70, 90, 130))
         self.window.blit(self.robot.image, self.robot.rect)
+        for obj in self.falling_objects:
+            self.window.blit(obj.image, obj.rect)
         pygame.display.flip()
 
-
-
+    def spawn_falling_object(self):
+        obj_type = random.choices(["coin", "monster"], weights=[30, 70])[0]
+        x = random.randint(0, WINDOW_WIDTH - self.images[obj_type].get_width())
+        y = -self.images[obj_type].get_height()
+        self.falling_objects.append(FallingObject(x, y, self.images[obj_type], obj_type))
 
 
 if __name__ == "__main__":
