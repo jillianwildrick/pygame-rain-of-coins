@@ -106,11 +106,14 @@ class Game:
         y = -self.images[obj_type].get_height()
         self.falling_objects.append(FallingObject(x, y, self.images[obj_type], obj_type))
 
-    def is_off_screen(self, obj: FallingObject):
+    def is_off_screen(self, obj: FallingObject) -> bool:
         return obj.rect.y > WINDOW_HEIGHT
 
-    def intercepted(self, obj: FallingObject):
+    def intercepted(self, obj: FallingObject) -> bool:
         return self.robot.rect.colliderect(obj.rect)
+
+    def check_for_win(self) -> bool:
+        return self.score >= 20
 
 
 if __name__ == "__main__":
