@@ -62,6 +62,7 @@ class Game:
                 obj.fall()
             if random.random() < SPAWN_CHANCE:
                 self.spawn_falling_object()
+            self.falling_objects = [obj for obj in self.falling_objects if not self.is_off_screen(obj)]
             self.draw_window()
             self.clock.tick(60)
 
@@ -94,6 +95,10 @@ class Game:
         x = random.randint(0, WINDOW_WIDTH - self.images[obj_type].get_width())
         y = -self.images[obj_type].get_height()
         self.falling_objects.append(FallingObject(x, y, self.images[obj_type], obj_type))
+
+    def is_off_screen(self, obj):
+        return obj.rect.y > WINDOW_HEIGHT
+
 
 
 if __name__ == "__main__":
