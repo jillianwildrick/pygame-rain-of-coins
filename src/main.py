@@ -42,8 +42,7 @@ class Game:
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.clock = pygame.time.Clock()
         self.game_font = pygame.font.SysFont("Arial", 24)
-        self.main_loop()
-        
+        self.main_loop()    
 
     def load_images(self):
         self.images = {"robot": pygame.image.load("robot.png"), "coin": pygame.image.load("coin.png"), "monster": pygame.image.load("monster.png")}
@@ -65,12 +64,12 @@ class Game:
             for obj in self.falling_objects[:]:
                 if self.intercepted(obj):
                     if obj.obj_type == "coin":
-                        #score += 1
+                        self.score += 1 
                         self.falling_objects.remove(obj)
                     else:
                         #You lose!
                         return
-                        
+
             self.falling_objects = [obj for obj in self.falling_objects if not self.is_off_screen(obj)]
             self.draw_window()
             self.clock.tick(60)
@@ -93,10 +92,12 @@ class Game:
                     self.robot.to_right = False
 
     def draw_window(self):
-        self.window.fill((70, 90, 130))
+        self.window.fill((0, 150, 255))
         self.window.blit(self.robot.image, self.robot.rect)
         for obj in self.falling_objects:
             self.window.blit(obj.image, obj.rect)
+        score_text = self.game_font.render(f"Score: {self.score}", True, (255, 255, 255))
+        self.window.blit(score_text, (WINDOW_WIDTH - 150, 10))
         pygame.display.flip()
 
     def spawn_falling_object(self):
