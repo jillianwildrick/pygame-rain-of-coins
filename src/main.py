@@ -67,10 +67,13 @@ class Game:
                         self.score += 1 
                         self.falling_objects.remove(obj)
                     else:
-                        #You lose!
+                        self.render_win_lose_screen()
                         return
 
             self.falling_objects = [obj for obj in self.falling_objects if not self.is_off_screen(obj)]
+            if self.check_for_win():
+                self.render_win_lose_screen()
+                return
             self.draw_window()
             self.clock.tick(60)
 
@@ -114,7 +117,38 @@ class Game:
 
     def check_for_win(self) -> bool:
         return self.score >= 20
+        
+    def render_win_lose_screen(self):
+        if self.score >= 20:
+            fill_color = (255, 255, 255)
+            text_color = (0, 53, 128)
+            message = "Congratulations! You won!!"
+        else:
+            fill_color = (40, 40, 45)
+            text_color = (255, 255, 255)
+            message = "Oh no! The Monster ate your Robot!"
 
+        self.window.fill(fill_color)
+
+        outcome_text = self.game_font.render(message, True, text_color)
+        self.window.blit(outcome_text,(WINDOW_WIDTH // 2 - outcome_text.get_width() // 2, WINDOW_HEIGHT // 2 - 20))
+
+        instructions_text = self.game_font.render("F2: Play Again    ESC: Quit", True, text_color)
+        self.window.blit(instructions_text,(WINDOW_WIDTH // 2 - instructions_text.get_width() // 2, WINDOW_HEIGHT // 2 + 20))
+
+        pygame.display.flip()
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_F2:
+                        self.new_game()
+                        self.main_loop()
+                        return
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
 
 if __name__ == "__main__":
     Game()
